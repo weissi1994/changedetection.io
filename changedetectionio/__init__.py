@@ -1174,6 +1174,26 @@ def changedetection_app(config=None, datastore_o=None):
             except FileNotFoundError:
                 abort(404)
 
+        if group == 'previous-screenshot':
+            # Could be sensitive, follow password requirements
+            if datastore.data['settings']['application']['password'] and not flask_login.current_user.is_authenticated:
+                abort(403)
+
+            screenshot_filename = "previous-screenshot.png" if not request.args.get('error_screenshot') else "previous-error-screenshot.png"
+
+            # These files should be in our subdirectory
+            try:
+                # set nocache, set content-type
+                response = make_response(send_from_directory(os.path.join(datastore_o.datastore_path, filename), screenshot_filename))
+                response.headers['Content-type'] = 'image/png'
+                response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+                response.headers['Pragma'] = 'no-cache'
+                response.headers['Expires'] = 0
+                return response
+
+            except FileNotFoundError:
+                abort(404)
+
 
         if group == 'visual_selector_data':
             # Could be sensitive, follow password requirements

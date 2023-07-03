@@ -2,7 +2,6 @@
 {% from '_helpers.jinja' import render_field, render_checkbox_field, render_button %}
 {% block content %}
 <script>
-    const screenshot_url="{{url_for('static_content', group='screenshot', filename=uuid)}}";
     {% if last_error_screenshot %}
     const error_screenshot_url="{{url_for('static_content', group='screenshot', filename=uuid, error_screenshot=1) }}";
     {% endif %}
@@ -101,9 +100,19 @@
      <div class="tab-pane-inner" id="screenshot">
          {% if is_html_webdriver %}
            {% if screenshot %}
+            <script
+              defer
+              src="https://unpkg.com/img-comparison-slider@7/dist/index.js"
+            ></script>
+            <link
+              rel="stylesheet"
+              href="https://unpkg.com/img-comparison-slider@7/dist/styles.css"
+            />
             <div class="snapshot-age">{{watch_a.snapshot_screenshot_ctime|format_timestamp_timeago}}</div>
-            <img style="max-width: 80%" src="{{ url_for('render_diff_image', uuid=uuid) }}" />
-            <img style="max-width: 80%" id="screenshot-img" alt="Current screenshot from most recent request" >
+            <img-comparison-slider>
+              <img slot="first" style="max-width: 80%" src="{{ url_for('render_diff_image', uuid=uuid) }}" />
+              <img slot="second" style="max-width: 80%" src="{{ url_for('static_content', group='previous-screenshot', filename=uuid) }}" />
+            </img-comparison-slider>
            {% else %}
               No visual diff available just yet! Try rechecking the page.
            {% endif %}
