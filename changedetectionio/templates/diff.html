@@ -102,7 +102,8 @@
          {% if is_html_webdriver %}
            {% if screenshot %}
             <div class="snapshot-age">{{watch_a.snapshot_screenshot_ctime|format_timestamp_timeago}}</div>
-            <img style="max-width: 80%" src="{{ url_for('render_diff_image', uuid=uuid, compare_date=current_previous_version) }}" />
+            <img style="max-width: 80%" src="{{ url_for('render_diff_image', uuid=uuid) }}" />
+            <img style="max-width: 80%" id="screenshot-img" alt="Current screenshot from most recent request" >
            {% else %}
               No visual diff available just yet! Try rechecking the page.
            {% endif %}
