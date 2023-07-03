@@ -99,15 +99,12 @@
          Diff algorithm from the amazing <a href="https://github.com/kpdecker/jsdiff">github.com/kpdecker/jsdiff</a>
      </div>
      <div class="tab-pane-inner" id="screenshot">
-         <div class="tip">
-             For now, Differences are performed on text, not graphically, only the latest screenshot is available.
-         </div>
          {% if is_html_webdriver %}
            {% if screenshot %}
             <div class="snapshot-age">{{watch_a.snapshot_screenshot_ctime|format_timestamp_timeago}}</div>
-            <img style="max-width: 80%" id="screenshot-img" alt="Current screenshot from most recent request" >
+            <img style="max-width: 80%" src="{{ url_for('render_diff_image', uuid=uuid, compare_date=current_previous_version) }}" />
            {% else %}
-              No screenshot available just yet! Try rechecking the page.
+              No visual diff available just yet! Try rechecking the page.
            {% endif %}
          {% else %}
            <strong>Screenshot requires Playwright/WebDriver enabled</strong>

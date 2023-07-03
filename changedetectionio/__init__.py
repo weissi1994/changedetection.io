@@ -810,6 +810,21 @@ def changedetection_app(config=None, datastore_o=None):
 
         return output
 
+    # render an image which contains the diff of two images
+    # We always compare the newest against whatever compare_date we are given
+    @app.route("/diff/image/<string:uuid>")
+    def render_diff_image(uuid):
+        from changedetectionio import image_diff
+
+        from flask import make_response
+        new_img = f"{datastore.datastore_path}/{uuid}/last-screenshot.png"
+        prev_img = f"{datastore.datastore_path}/{uuid}/previous-screenshot.png"
+        img = image_diff.render_diff(new_img, prev_img)
+
+        resp = make_response(img)
+        resp.headers['Content-Type'] = 'image/jpeg'
+        return resp
+
     @app.route("/import", methods=['GET', "POST"])
     @login_optionally_required
     def import_page():
