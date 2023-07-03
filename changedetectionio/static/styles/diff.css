@@ -218,3 +218,9 @@ td#diff-col div {
   text-align: center; }
   .tab-pane-inner#screenshot img {
     max-width: 99%; }
+
+img-comparison-slider {
+  --divider-width: 2px;
+  --divider-color: #202050;
+  --default-handle-opacity: 0.9;
+}
