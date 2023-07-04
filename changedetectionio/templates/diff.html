@@ -110,8 +110,8 @@
             />
             <div class="snapshot-age">{{watch_a.snapshot_screenshot_ctime|format_timestamp_timeago}}</div>
             <img-comparison-slider>
-              <img slot="first" src="{{ url_for('render_diff_image', uuid=uuid) }}" />
-              <img slot="second" src="{{ url_for('static_content', group='previous-screenshot', filename=uuid) }}" />
+              <img slot="first" src="{{ url_for('render_diff_image', uuid=uuid, compare_date=current_previous_version) }}" />
+              <img slot="second" src="{{ url_for('render_single_image', uuid=uuid, history_timestamp=current_previous_version) }}" />
             </img-comparison-slider>
            {% else %}
               No visual diff available just yet! Try rechecking the page.

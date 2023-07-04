@@ -349,15 +349,16 @@ class ChangeDetectionStore:
         if not self.data['watching'].get(watch_uuid):
             return
 
+        dates = list(self.data['watching'].get(watch_uuid).history.keys())
         if as_error:
             if os.path.isfile(os.path.join(self.datastore_path, watch_uuid, "last-error-screenshot.png")):
                 os.rename(os.path.join(self.datastore_path, watch_uuid, "last-error-screenshot.png"),
-                          os.path.join(self.datastore_path, watch_uuid, "previous-error-screenshot.png"))
+                          os.path.join(self.datastore_path, watch_uuid, f"{dates[-2]}-screenshot.png"))
             target_path = os.path.join(self.datastore_path, watch_uuid, "last-error-screenshot.png")
         else:
             if os.path.isfile(os.path.join(self.datastore_path, watch_uuid, "last-screenshot.png")):
                 os.rename(os.path.join(self.datastore_path, watch_uuid, "last-screenshot.png"),
-                          os.path.join(self.datastore_path, watch_uuid, "previous-screenshot.png"))
+                          os.path.join(self.datastore_path, watch_uuid, f"{dates[-2]}-screenshot.png"))
             target_path = os.path.join(self.datastore_path, watch_uuid, "last-screenshot.png")
 
         self.data['watching'][watch_uuid].ensure_data_dir_exists()

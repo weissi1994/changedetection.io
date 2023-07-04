@@ -812,18 +812,63 @@ def changedetection_app(config=None, datastore_o=None):
 
     # render an image which contains the diff of two images
     # We always compare the newest against whatever compare_date we are given
-    @app.route("/diff/image/<string:uuid>")
-    def render_diff_image(uuid):
+    @app.route("/diff/image/<string:uuid>/<string:compare_date>")
+    def render_diff_image(uuid, compare_date):
         from changedetectionio import image_diff
 
         from flask import make_response
+        try:
+            watch = datastore.data['watching'][uuid]
+        except KeyError:
+            flash("No history found for the specified link, bad link?", "error")
+            return redirect(url_for('index'))
+
+        history = watch.history
+        dates = list(history.keys())
+
+        if len(dates) < 2:
+            flash("Not enough saved change detection snapshots to produce a report.", "error")
+            return redirect(url_for('index'))
+        if not compare_date or compare_date == 'None':
+            compare_date = dates[-2]
+
         new_img = f"{datastore.datastore_path}/{uuid}/last-screenshot.png"
-        prev_img = f"{datastore.datastore_path}/{uuid}/previous-screenshot.png"
-        img = image_diff.render_diff(new_img, prev_img)
+        prev_img = f"{datastore.datastore_path}/{uuid}/{compare_date}-screenshot.png"
+        try:
+            img = image_diff.render_diff(new_img, prev_img)
+        except ValueError as e:
+            print ("EXCEPTION: Diff image - got exception {} reverting to raw image without rendering difference".format(str(e)))
+            with open(new_img, 'rb') as f:
+                img = f.read()
 
         resp = make_response(img)
         resp.headers['Content-Type'] = 'image/jpeg'
         return resp
+
+    @app.route("/preview/image/<string:uuid>/<string:history_timestamp>")
+    def render_single_image(uuid, history_timestamp):
+
+        watch = datastore.data['watching'].get(uuid)
+        dates = list(watch.history.keys())
+
+
+        if not history_timestamp or history_timestamp == 'None':
+            history_timestamp = dates[-2]
+
+
+        filename = watch.history[history_timestamp]
+        filename = f"{datastore.datastore_path}/{uuid}/{history_timestamp}-screenshot.png"
+        with open(filename, 'rb') as f:
+            img = f.read()
+
+        response = make_response(img)
+
+        response.headers['Content-type'] = 'image/png'
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = 0
+
+        return response
 
     @app.route("/import", methods=['GET', "POST"])
     @login_optionally_required
