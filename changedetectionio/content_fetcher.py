@@ -544,7 +544,7 @@ class base_html_playwright(Fetcher):
             try:
                 # The actual screenshot
                 self.screenshot = self.page.screenshot(type='jpeg', full_page=True,
-                                                       quality=int(os.getenv("PLAYWRIGHT_SCREENSHOT_QUALITY", 72)))
+                                                       quality=int(os.getenv("PLAYWRIGHT_SCREENSHOT_QUALITY", 72)), timeout=60000)
             except Exception as e:
                 print(e)
                 context.close()
