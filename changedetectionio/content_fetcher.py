@@ -306,7 +306,7 @@ class base_html_playwright(Fetcher):
         code = code.replace('%instock_scrape_code%', self.instock_data_js)
 
         from requests.exceptions import ConnectTimeout, ReadTimeout
-        wait_browserless_seconds = 240
+        wait_browserless_seconds = 360
 
         browserless_function_url = os.getenv('BROWSERLESS_FUNCTION_URL')
         from urllib.parse import urlparse
@@ -543,6 +543,7 @@ class base_html_playwright(Fetcher):
             # acceptable screenshot quality here
             try:
                 # The actual screenshot
+                self.page.waitForNavigation('domcontentloaded');
                 self.screenshot = self.page.screenshot(type='jpeg', full_page=True,
                                                        quality=int(os.getenv("PLAYWRIGHT_SCREENSHOT_QUALITY", 72)))
             except Exception as e:
