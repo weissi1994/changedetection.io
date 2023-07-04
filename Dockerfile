@@ -62,4 +62,4 @@ COPY changedetection.py /app/changedetection.py
 
 WORKDIR /app
 
-CMD [ "gunicorn", "--preload", "--bind", "0.0.0.0:5000","-w", "4", "--threads", "4", "changedetectionio:docker_app()" ]
+CMD [ "python", "./changedetection.py" , "-d", "/datastore"]

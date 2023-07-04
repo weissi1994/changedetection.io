@@ -72,9 +72,6 @@ pillow
 pytest ~=7.2
 pytest-flask ~=1.2
 
-# For production ready deployment
-gunicorn
-
 # For visual diff
 opencv-python-headless
 scikit-image

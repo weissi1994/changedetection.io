@@ -35,7 +35,7 @@ from flask import (
 
 from flask_paginate import Pagination, get_page_parameter
 
-from changedetectionio import html_tools, store
+from changedetectionio import html_tools
 from changedetectionio.api import api_v1
 
 __version__ = '0.43.2'
@@ -208,10 +208,6 @@ def login_optionally_required(func):
         return func(*args, **kwargs)
 
     return decorated_view
-
-def docker_app():
-    return changedetection_app(config={'datastore_path': '/datastore'}, datastore_o=store.ChangeDetectionStore(datastore_path='/datastore', version_tag=__version__))
-
 
 def changedetection_app(config=None, datastore_o=None):
     global datastore
