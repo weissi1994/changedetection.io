@@ -447,7 +447,7 @@ class base_html_playwright(Fetcher):
                 # This is needed to enable JavaScript execution on GitHub and others
                 bypass_csp=True,
                 # Should be `allow` or `block` - sites like YouTube can transmit large amounts of data via Service Workers
-                service_workers=os.getenv('PLAYWRIGHT_SERVICE_WORKERS', 'allow'),
+                service_workers=os.getenv('PLAYWRIGHT_SERVICE_WORKERS', 'block'),
                 # Should never be needed
                 accept_downloads=False
             )
@@ -543,10 +543,10 @@ class base_html_playwright(Fetcher):
             # acceptable screenshot quality here
             try:
                 # The actual screenshot
-                self.page.waitForNavigation('domcontentloaded');
                 self.screenshot = self.page.screenshot(type='jpeg', full_page=True,
                                                        quality=int(os.getenv("PLAYWRIGHT_SCREENSHOT_QUALITY", 72)))
             except Exception as e:
+                print(e)
                 context.close()
                 browser.close()
                 raise ScreenshotUnavailable(url=url, status_code=None)
